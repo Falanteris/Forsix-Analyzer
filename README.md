@@ -31,7 +31,7 @@ To invoke the *listener*, you can do the following:
 `var newListener = new listener("C:\\foo","bar.txt")`
 
 Taking the previously made, `listener` Class, we would now create a new `listener` instance.
-Thankfully, most of the processeses inside the modulde are done *Asynchronously*, which means multiple instances of listener should be a ok.
+Thankfully, most of the processeses inside the module are done *Asynchronously*, which means multiple instances of listener should be a ok.
 
 Now that we have the `listener` instance ready, we can use the `listen()` method that the `listener` instance has, and use it to listen to the specified directory. Like this:
 
