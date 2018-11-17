@@ -5,7 +5,7 @@ A High Level Directory Logging Tool.
 
 This is a College Project that me and my friends made.
 Right now, its able to seamlessly detect file changes within a directory. Currently the project is CLI based, we might consider using Elektron Framework to connect the module to a GUI version.
-But, the module is 80 % finished, if you wish to try, you can `git clone`- this project (need to get invited first though.).
+But, the module is more or less ready. If you wish to try, you can `git clone`- this project (need to get invited first though).
 
 # Technical Details
 
