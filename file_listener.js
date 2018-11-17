@@ -1,6 +1,8 @@
 var fs = require('fs');
 var readline = require('readline');
 var crypto = require('crypto');
+
+
 exports.listener = class dirListener{
 	constructor(dir,logfile="dirlog.txt"){
 			this.dir = dir;
@@ -39,15 +41,56 @@ exports.listener = class dirListener{
 				console.log(`Failed to read and append meta of ${dir}`);
 			}					
 	}
-	log(input){
+	detActivity(event,file){
+		var activity = this.activity.split("|");
+		var activ = "";
+		let index;
+		for(index in activity){
+			activ+=activity[index];
+		}
+		console.log(activ)
+
 		
-				fs.appendFile(this.logfile_name,input+"\n",(err) => {
-						if(err) console.log(err);
+
+		if(event == "rename"){
+
+		if(activ.search("Missing")!=-1){
+			console.log(`${file} has been deleted`);
+			this.activity = "";
+		}
+		if(activ.search("Found")!=-1){
+			console.log(`${file} is a new file..`)
+			this.activity = "";
+		}
+
+		}
+		if(event =="change"){
+			console.log(`${file} was modified`);
+			this.activity = "";
+		}
+	}
+	log(input){
+				var name = this.logfile_name;
+				var prm = new Promise(
+					function(resolve,reject){
+
+				fs.appendFile(name,input+"\n",(err) => {
+						if(err) reject(err);
+						resolve("WRITE SUCCESS");
 				});
+					}
+				).then((res) => {
+					console.log("Changes have been written to log file");
+				}).catch((err) => {
+					console.log(err);
+				})
 
 	}
 	listen(){
+		this.activity = "";
 		console.log(`Attemtping to start listening activity on ${this.dir}`);
+		var changes = "";
+		let activity;
 		this.listener = fs.watch(this.dir, (event,filename,err) => {
 			if(err) throw err;
 	
@@ -56,22 +99,27 @@ exports.listener = class dirListener{
 				var file = fs.statSync(this.dir+"\\"+filename);
 				var read_meta = fs.readFileSync(this.meta_name, 'utf8');
 				console.log("File type : " + typeof(file));
+
 				if(typeof(file)=="object"){
 					console.log(file);
+					this.activity+="Found";
 				}
+				
 			}
 			catch{
-			
+				
 				console.log("Error in extracting meta..file might be moved or deleted");
+				this.activity+="Missing";
+				
 			}
-			console.log(event);	
-		});
-		this.listener.on("rename", (err,data) => {
+			var prom_detect = new Promise(function(resolve,reject){
+				setTimeout(resolve(filename),1000);
+			}).then((file)=>{
+				this.detActivity(event,file);
+			}).catch((nocool)=>{
+				console.log("An Error Occured..");
+			})
 			
-			this.log(`${data} has been altered | code : rename`);	
-		});
-		this.listener.on("change", (err,data) =>{
-			this.log(`${data} has been altered | code : change`);	
 		});
 	}
 }
