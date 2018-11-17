@@ -43,6 +43,7 @@ The *logfile* will be created on the current working directory or *cwd* in short
 
 # Additional Tips
   ***1. It's recommended to use `Promise` to wrap the listener in case anything goes wrong. Since the listener would run `Asynchronously`***
+  
   ***2. Make sure to use `setTimeout()` before running another instance of `listener`, this is to reduce the change of race condition problems.***
 
 
