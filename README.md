@@ -36,6 +36,7 @@ Thankfully, most of the processeses inside the modulde are done *Asynchronously*
 Now that we have the `listener` instance ready, we can use the `listen()` method that the `listener` instance has, and use it to listen to the specified directory. Like this:
 
 `newListener.listen()`
+
 And that's it, listener would now be running on the specified directory.
 
 The *logfile* will be created on the current working directory or *cwd* in short, you can view the cwd of the app by using `process.cwd()`.
