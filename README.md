@@ -13,7 +13,7 @@ Well, to put it simply, all you need to do is.
 
 `var listener = require("./file_listener").listener`
 
-put that code into your *Node.js* code, and the listener is now ready to use.
+Put that code into your *Node.js* code, and the listener is now ready to use.
 
 
 To start listening, the *listener* is a *Class* that upon construction, would require two arguments
