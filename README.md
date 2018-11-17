@@ -42,7 +42,7 @@ And that's it, listener would now be running on the specified directory.
 The *logfile* will be created on the current working directory or *cwd* in short, you can view the cwd of the app by using `process.cwd()`.
 
 # Additional Tips
-  ***1. It's recommended to use `Promise` to wrap the listener in case anything goes wrong. Since the listener would run `Asynchronously`***
+  ***1. It's recommended to use `Promise` to wrap the listener in case something went wrong. Since the listener would run `Asynchronously`***
   
   ***2. Make sure to use `setTimeout()` before running another instance of `listener`, this is to reduce the chance of race condition problems.***
 
