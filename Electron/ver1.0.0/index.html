@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <link rel="stylesheet" type="text/css" href="./main.css">
+  <script>
+
+        require('./listen.js')
+    </script>
+  <body>
+    <h1>Forsix Directory Listener..!</h1>
+    
+    <form action="checkDir">
+      <input type="text" name="dirname">
+      <button id ="submit">Track Directory</button>
+      <button type="reset">Restart</button>
+    </form>
+  <div class="listen_holder">
+
+   </div>
+  </body>
+   <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+    </script>
+    
+</html>
