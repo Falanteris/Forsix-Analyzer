@@ -1,17 +1,27 @@
 var fs = require('fs');
 var readline = require('readline');
 var crypto = require('crypto');
-
+var path = require("path")
 
 exports.listener = class dirListener{
 	constructor(dir,logfile="dirlog.txt"){
 			this.dir = dir;
-			this.contents = fs.readdirSync(dir);
-			var paths = this.dir.split("\\");
-
+			this.contents = fs.readdirSync(path.normalize(dir));
+			if(process.platform=="win32"){
+				
+				this.splitter = "\\"
+				//WIN32
+			}
+			else{
+				this.splitter = "/"
+				;
+				//UNIX
+			}
+			var paths = this.dir.split(this.splitter);
 			this.meta_name = `${paths[paths.length-1]}.json`;
 			console.log(this.meta_name);
 			this.logfile_name = logfile;
+			
 			var dir_read = fs.readdirSync(this.dir);
 			let content;
 			for(content in dir_read){
@@ -25,8 +35,8 @@ exports.listener = class dirListener{
 	}
 	meta(dir,files){
 			try{
-			 		console.log(dir+"\\"+files)
-					var meta = fs.statSync(dir+"\\"+files);
+			 		console.log(dir+this.splitter+files)
+					var meta = fs.statSync(dir+this.splitter+files);
 
 					console.log(meta);	
 						var hash = crypto.createHash("sha256");
@@ -36,7 +46,7 @@ exports.listener = class dirListener{
 						var	check_sum_ref =  `{ name:${files} , hash:${meta}}`;
 						fs.appendFileSync(this.meta_name,check_sum_ref+"\n");
 			}
-			catch{
+			catch(error){
 
 				console.log(`Failed to read and append meta of ${dir}`);
 			}					
@@ -95,8 +105,8 @@ exports.listener = class dirListener{
 			if(err) throw err;
 	
 			try{
-				console.log(this.dir+"\\"+filename);
-				var file = fs.statSync(this.dir+"\\"+filename);
+				console.log(this.dir+this.splitter+filename);
+				var file = fs.statSync(this.dir+this.splitter+filename);
 				var read_meta = fs.readFileSync(this.meta_name, 'utf8');
 				console.log("File type : " + typeof(file));
 
@@ -106,8 +116,8 @@ exports.listener = class dirListener{
 				}
 				
 			}
-			catch{
-				
+			catch(error){
+				console.log(error)
 				console.log("Error in extracting meta..file might be moved or deleted");
 				this.activity+="Missing";
 				
