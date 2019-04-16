@@ -26,23 +26,23 @@
 
       document.addEventListener("submit", (e) =>{
         e.preventDefault();
-                var getDir = document.forms.item(0).dirname.value;
-        
-        var ls = require('./file_listener.js');
-        var path = require("path");
-        
-        var getPath = path.normalize(process.cwd()+"\\"+getDir)
-        
-        if(getDir.length == 0 || getDir == "/"){
-          getDir = "Main";
-        }
-        var new_listener = new ls(getPath,getDir);
-        var id = newFileLsDiv();
-        document.getElementById(id).innerHTML = `Listening on..${getPath}`
-        const dirWatch = require("./div_listener.js");
 
-        var file_read =  new dirWatch(id,getDir);
+        var getDir = document.forms.item(0).dirname.value;
+        
+        var ls = require('./file_listener').listener;
+        var path = require("path");
+        let getPath = path.normalize(getDir)
+        var getName = getPath.split("/");
+        var new_listener = new ls(getPath,getName[getName.length-1]+".txt");
+        alert(typeof(new_listener))
+        var id = newFileLsDiv();  
+
+        document.getElementById(id).innerHTML = `Listening on..${getPath}`
+        const dirWatch = require("./div_listener");
+
+        var file_read =  new dirWatch(id,getName[getName.length-1]+".txt");
         file_read.start();
+
 var attempt_prm = new Promise(function(resolve,reject){
 
     new_listener.listen();

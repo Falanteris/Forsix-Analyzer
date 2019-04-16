@@ -1,88 +1,103 @@
 var fs = require('fs');
 var readline = require('readline');
 var crypto = require('crypto');
+var path = require("path")
 
-
-module.exports = class dirListener{
+exports.listener = class dirListener{
 	constructor(dir,logfile="dirlog.txt"){
-			this.dir = dir
-			
-			
-			
-			
-			this.contents = fs.readdirSync(dir);
-			
-
-			this.meta_name = logfile
+			this.dir = dir;
+			this.contents = fs.readdirSync(path.normalize(dir));
+			if(process.platform=="win32"){
+				
+				this.splitter = "\\"
+				//WIN32
+			}
+			else{
+				this.splitter = "/"
+				;
+				//UNIX
+			}
+			var paths = this.dir.split(this.splitter);
+			this.meta_name = `${paths[paths.length-1]}.json`;
 			console.log(this.meta_name);
-			this.logfile_name = logfile+".txt";
+			this.logfile_name = logfile;
+			
 			var dir_read = fs.readdirSync(this.dir);
+			if (typeof(dir_read)=="error"){
+				return new Error("File Does Not Exist")
+			}
 			let content;
 			for(content in dir_read){
 				this.meta(this.dir,dir_read[content]);
 			}
 			var date = new Date();
-			var date_str = `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()} -${date.getDate()}  | ${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()} \n`;	
+			var date_str = `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()} -${date.getDate()}  | ${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()} <br>`;	
 			var inst = ` -------Log created at : ${date_str}----- `;
-			fs.appendFileSync(this.logfile_name,inst+"\n");
+			fs.appendFileSync(this.logfile_name,inst+"<br>");
 
 	}
 	meta(dir,files){
 			try{
-			 		
-					var meta = fs.statSync(dir+"\\"+files);
+			 		console.log(dir+this.splitter+files)
+					var meta = fs.statSync(dir+this.splitter+files);
 
-					console.log(meta);	
-						var hash = crypto.createHash("sha256");
 					
-						hash.update(JSON.stringify(meta));
-						var meta = hash.digest();
-						var	check_sum_ref = "{name:"+files+"hash:"+meta+"}";
-						fs.appendFileSync(this.meta_name+".json",check_sum_ref+"\n");
+						
+						
+						var	check_sum_ref =  `{ name:${files} , hash:${JSON.stringify(meta)}}`;
+						fs.appendFileSync(this.meta_name,check_sum_ref+"<br>");
 			}
-			catch{
+			catch(error){
 
 				console.log(`Failed to read and append meta of ${dir}`);
 			}					
 	}
 	detActivity(event,file){
-		if(file == this.logfile_name || file == this.meta_name){
-			return
-		}
 		var activity = this.activity.split("|");
 		var activ = "";
 		let index;
 		for(index in activity){
 			activ+=activity[index];
 		}
-		console.log(activ)
+
 
 		
 
 		if(event == "rename"){
 
 		if(activ.search("Missing")!=-1){
-			this.log("<br>"+file + " metadata's missing <br>");
+			console.log(`${file} has been deleted`);
 			this.activity = "";
-			return;
+			this.log(`${file} has been deleted`)
 		}
 		if(activ.search("Found")!=-1){
-			this.log("<br>"+file + " is a new file..<br>")
+			console.log(`${file} is a new file..`)
 			this.activity = "";
-			return
+			this.log(`${file} is a new file`)
 		}
 
 		}
 		if(event =="change"){
-			this.log("<br>"+file + " was modified <br>");
+			console.log(`${file} was modified`);
 			this.activity = "";
-			return
+			this.log(`${file} was modified`)
 		}
 	}
 	log(input){
-				
-				
-				fs.appendFileSync(this.logfile_name,input+"\n")
+				var name = this.logfile_name;
+				var prm = new Promise(
+					function(resolve,reject){
+
+				fs.appendFile(name,input+"<br>",(err) => {
+						if(err) reject(err);
+						resolve("WRITE SUCCESS");
+				});
+					}
+				).then((res) => {
+					console.log("Changes have been written to log file");
+				}).catch((err) => {
+					console.log(err);
+				})
 
 	}
 	listen(){
@@ -91,12 +106,12 @@ module.exports = class dirListener{
 		var changes = "";
 		let activity;
 		this.listener = fs.watch(this.dir, (event,filename,err) => {
-			if(err) this.err = err;
+			if(err) throw err;
 	
 			try{
-				console.log(this.dir+"\\"+filename);
-				var file = fs.statSync(this.dir+"\\"+filename);
-				var read_meta = fs.readFileSync(this.meta_name+".json", 'utf8');
+				console.log(this.dir+this.splitter+filename);
+				var file = fs.statSync(this.dir+this.splitter+filename);
+				var read_meta = fs.readFileSync(this.meta_name, 'utf8');
 				console.log("File type : " + typeof(file));
 
 				if(typeof(file)=="object"){
@@ -105,8 +120,8 @@ module.exports = class dirListener{
 				}
 				
 			}
-			catch{
-				
+			catch(error){
+				console.log(error)
 				console.log("Error in extracting meta..file might be moved or deleted");
 				this.activity+="Missing";
 				
@@ -114,6 +129,7 @@ module.exports = class dirListener{
 			var prom_detect = new Promise(function(resolve,reject){
 				setTimeout(resolve(filename),1000);
 			}).then((file)=>{
+				console.log(event)
 				this.detActivity(event,file);
 			}).catch((nocool)=>{
 				console.log("An Error Occured..");
