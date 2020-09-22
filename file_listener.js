@@ -19,7 +19,9 @@ exports.listener = class dirListener{
 			}
 			var paths = this.dir.split(this.splitter);
 			this.meta_name = `${paths[paths.length-1]}.json`;
+
 			this.logfile_name = logfile
+
 			
 			var dir_read = fs.readdirSync(this.dir);
 			let content;
@@ -50,6 +52,7 @@ exports.listener = class dirListener{
 	}
 	meta(dir,files){
 			try{
+
 					var meta = fs.statSync(dir+this.splitter+files);
 					var	check_sum_ref =  `{ name:${files} , hash:${JSON.stringify(meta)}}`;
 					fs.appendFileSync(this.meta_name,check_sum_ref+"\n");
@@ -127,6 +130,7 @@ exports.listener = class dirListener{
 			if(err) throw err;
 			
 			try{
+
 				// console.log(this.dir+this.splitter+filename);
 				// var file = fs.statSync(this.dir+this.splitter+filename);
 				//var read_meta = fs.readFileSync(this.meta_name, 'utf8');
