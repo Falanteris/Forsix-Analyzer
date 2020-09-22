@@ -7,7 +7,7 @@ module.exports = class dirWatcherThread{
         async start(){
           this.process = setInterval(()=>{
           
-          var res = fs.readFileSync(`${this.getDir}.txt`);
+          var res = fs.readFileSync(`${this.getDir}`);
           
           this.appendContent(res.toString(),this.id);
           },2000)

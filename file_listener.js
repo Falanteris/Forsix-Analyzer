@@ -4,7 +4,7 @@ var crypto = require('crypto');
 var path = require("path")
 
 exports.listener = class dirListener{
-	constructor(dir,logfile="dirlog.txt"){
+	constructor(dir,logfile="entry.log"){
 			this.dir = dir;
 			this.contents = fs.readdirSync(path.normalize(dir));
 			if(process.platform=="win32"){
@@ -19,64 +19,86 @@ exports.listener = class dirListener{
 			}
 			var paths = this.dir.split(this.splitter);
 			this.meta_name = `${paths[paths.length-1]}.json`;
-			console.log(this.meta_name);
-			this.logfile_name = logfile;
+
+			this.logfile_name = logfile
+
 			
 			var dir_read = fs.readdirSync(this.dir);
 			let content;
+			this.subdir_listeners = []
 			for(content in dir_read){
-				this.meta(this.dir,dir_read[content]);
-			}
-			var date = new Date();
-			var date_str = `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()} -${date.getDate()}  | ${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()} \n`;	
-			var inst = ` -------Log created at : ${date_str}----- `;
-			fs.appendFileSync(this.logfile_name,inst+"\n");
+				try {
+					console.log(dir_read[content])
+					let test_read = fs.readFileSync(this.dir+this.splitter+dir_read[content]);
+					this.meta(this.dir,dir_read[content]);	
+				} catch (error) {
+					if(error.code == "EISDIR"){
 
+						let newSubdirListener = new dirListener(this.dir+this.splitter+dir_read[content],this.logfile_name)
+						this.subdir_listeners.push(newSubdirListener);
+
+					}
+				}
+			}
+			
+			
+			let date_str = this.getTimestamp();
+			var inst = `listening for new directory ${this.dir} at ${date_str}`;
+			fs.appendFileSync(this.logfile_name,inst);
+
+	}
+	newdir(){
+		fs.appendFileSync(this.meta_name,"{}");
 	}
 	meta(dir,files){
 			try{
-			 		console.log(dir+this.splitter+files)
-					var meta = fs.statSync(dir+this.splitter+files);
 
-					console.log(meta);	
-						var hash = crypto.createHash("sha256");
-					
-						hash.update(JSON.stringify(meta));
-						var meta = hash.digest();
-						var	check_sum_ref =  `{ name:${files} , hash:${meta}}`;
-						fs.appendFileSync(this.meta_name,check_sum_ref+"\n");
+					var meta = fs.statSync(dir+this.splitter+files);
+					var	check_sum_ref =  `{ name:${files} , hash:${JSON.stringify(meta)}}`;
+					fs.appendFileSync(this.meta_name,check_sum_ref+"\n");
 			}
 			catch(error){
 
 				console.log(`Failed to read and append meta of ${dir}`);
 			}					
 	}
+	getTimestamp(){
+		var date = new Date();
+		var date_str = `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()} -${date.getDate()}  | ${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()} \n`;	
+		return date_str;
+	}
 	detActivity(event,file){
 		var activity = this.activity.split("|");
 		var activ = "";
 		let index;
+		console.log(this.activity)
 		for(index in activity){
 			activ+=activity[index];
 		}
+
+
 		console.log(activ)
-
-		
-
 		if(event == "rename"){
 
 		if(activ.search("Missing")!=-1){
-			console.log(`${file} has been deleted`);
+			console.log(`${this.dir+this.splitter+file} has been deleted`);
 			this.activity = "";
+			var date_str = this.getTimestamp();	
+			this.log(`${this.dir+this.splitter+file} has been deleted at at ${date_str}`)
 		}
 		if(activ.search("Found")!=-1){
-			console.log(`${file} is a new file..`)
+			console.log(`${this.dir+this.splitter+file} is a new file..`)
 			this.activity = "";
+			var date_str = this.getTimestamp();
+			this.log(`${this.dir+this.splitter+file} is a new file created at at ${date_str}`)
 		}
 
 		}
 		if(event =="change"){
-			console.log(`${file} was modified`);
+			console.log(`${this.dir+this.splitter+file} was modified`);
 			this.activity = "";
+			var date_str = this.getTimestamp();
+			this.log(`${this.dir+this.splitter+file} was modified at ${date_str}`)
 		}
 	}
 	log(input){
@@ -101,34 +123,50 @@ exports.listener = class dirListener{
 		console.log(`Attemtping to start listening activity on ${this.dir}`);
 		var changes = "";
 		let activity;
+		for(let items in this.subdir_listeners){
+			this.subdir_listeners[items].listen();
+		}
 		this.listener = fs.watch(this.dir, (event,filename,err) => {
 			if(err) throw err;
-	
+			
 			try{
-				console.log(this.dir+this.splitter+filename);
-				var file = fs.statSync(this.dir+this.splitter+filename);
-				var read_meta = fs.readFileSync(this.meta_name, 'utf8');
-				console.log("File type : " + typeof(file));
 
-				if(typeof(file)=="object"){
-					console.log(file);
-					this.activity+="Found";
-				}
+				// console.log(this.dir+this.splitter+filename);
+				// var file = fs.statSync(this.dir+this.splitter+filename);
+				//var read_meta = fs.readFileSync(this.meta_name, 'utf8');
+				
+				let test_read = fs.readFileSync(this.dir+this.splitter+filename);
+				
+				// if(typeof(file)=="object"){
+				// 	console.log(file);
+				// }
+				// 
+				this.activity+="Found";
+				
 				
 			}
 			catch(error){
-				console.log(error)
-				console.log("Error in extracting meta..file might be moved or deleted");
-				this.activity+="Missing";
+				
+				if (error.code == "EISDIR"){
+					console.log("Detected newly made directory.. hooking it to listener")
+					let new_listener = new dirListener(this.dir+this.splitter+filename,this.logfile_name)
+					new_listener.listen();
+				}
+				else{
+					console.log("Error in extracting meta..file might be moved or deleted");
+					this.activity+="Missing";
+					console.log(error)
+				}
 				
 			}
-			var prom_detect = new Promise(function(resolve,reject){
-				setTimeout(resolve(filename),1000);
-			}).then((file)=>{
-				this.detActivity(event,file);
-			}).catch((nocool)=>{
-				console.log("An Error Occured..");
-			})
+			this.detActivity(event,filename);
+			// var prom_detect = new Promise(function(resolve,reject){
+			// 	setTimeout(resolve(filename),1000);
+			// }).then((file)=>{
+			// 	this.detActivity(event,file);
+			// }).catch((nocool)=>{
+			// 	console.log("An Error Occured..");
+			// })
 			
 		});
 	}
