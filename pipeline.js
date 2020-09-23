@@ -7,9 +7,6 @@ spawnSync("mkdir", [global_conf.test_folder])
 
 spawnSync("forever", ["--sourceDir",process.cwd(),"start","exported_forensic_project.js",global_conf.test_folder,global_conf.target_log])
 
-let tester2 = spawnSync("ls")
-
-console.log(tester2.stdout.toString())
 setTimeout(()=>{
 
     let tester = spawnSync("node",["testscript.js"])
