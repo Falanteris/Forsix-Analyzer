@@ -1,5 +1,6 @@
 let {spawn,spawnSync} = require("child_process")
 let {readFileSync} = require("fs")
+let {equal} = require("assert")
 let global_conf = JSON.parse(readFileSync("artifact.json"));
 
 spawnSync("mkdir", [global_conf.test_folder])
@@ -8,10 +9,8 @@ spawnSync("mkdir", [global_conf.test_folder])
 spawnSync("forever", ["--sourceDir",process.cwd(),"start","exported_forensic_project.js",global_conf.test_folder,global_conf.target_log])
 
 setTimeout(()=>{
-
     let tester = spawnSync("node",["testscript.js"])
-
-    console.log(tester.stdout.toString())
+    equal(tester.stderr.toString().length,0)
     console.log("[!] Stopping Services...")
     spawnSync("forever", ["stopall"])
     console.log("[!] Removing Logs...")
