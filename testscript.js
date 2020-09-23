@@ -81,13 +81,9 @@ try {
     process.exit(0)
     
 } catch (error) {
-    console.log(error)
-    throw error
-} finally{
-    // spawnSync("docker",["container","stop",global_conf.containerName]) ;
-    // spawnSync("docker",["container","rm",global_conf.containerName]) ;
     console.log("[-] Tests failed..")
-    process.exit(0)
+    throw error
+
 } 
 // }
 // let global_conf = {
