@@ -25,7 +25,7 @@ try {
         
         switch(global_conf.testsArgs[index]["type"]){
             case "dir":
-                spawnSync("mkdir"["-p",global_conf.testsArgs[index].name])
+                spawnSync("mkdir",["-p",global_conf.testsArgs[index].name])
                 let d = spawnSync("tail",["activity.log"])
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
@@ -51,7 +51,7 @@ try {
     for (let index = global_conf.testsArgs.length-1; index >= 0; index--) {
         switch(global_conf.testsArgs[index].type){
             case "dir":
-                spawnSync("mkdir"["-p",global_conf.testsArgs[index].name])
+                spawnSync("mkdir",["-p",global_conf.testsArgs[index].name])
                 let d = spawnSync("tail",["activity.log"])
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
