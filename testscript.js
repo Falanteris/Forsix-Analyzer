@@ -13,13 +13,13 @@ Array.prototype.remove = function() {
     return this;
 };
 
-let global_conf = JSON.parse(fs.readFileSync("artifact.json"));
+let global_conf = JSON.parse(readFileSync("artifact.json"));
    
 spawnSync("docker",["run","-d","--name",global_conf.containerName,"forsix-test"])
 try { 
-    console.log("[!] Performing initial setup, listening to log file")
+    console.log("[!] Testing for modified/creation..")
 
-    console.log("begin")
+    
     for (let index = 0; index < global_conf.testsArgs.length; index++) {
         
         switch(global_conf.testsArgs[index]["type"]){
