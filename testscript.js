@@ -27,6 +27,7 @@ try {
             case "dir":
                 spawnSync("mkdir",["-p",global_conf.testsArgs[index].name])
                 let d = spawnSync("tail",["activity.log"])
+                console.log(d)
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -36,6 +37,7 @@ try {
             case "file":
                 spawnSync("touch",[global_conf.testsArgs[index].name]);
                 let d2= spawnSync("tail",["activity.log"])
+                console.log(d2)
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
                 notDeepStrictEqual(dat2.remove('')[dat2.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -53,6 +55,7 @@ try {
             case "dir":
                 spawnSync("mkdir",["-p",global_conf.testsArgs[index].name])
                 let d = spawnSync("tail",["activity.log"])
+                console.log(d)
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -60,6 +63,7 @@ try {
             case "file":
                 spawnSync("touch",[global_conf.testsArgs[index].name]);
                 let d2= spawnSync("tail",["activity.log"])
+                console.log(d2)
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
                 notDeepStrictEqual(dat2.remove('')[dat2.length-1].search(global_conf.testsArgs[index].name),-1)
