@@ -26,8 +26,8 @@ try {
         switch(global_conf.testsArgs[index]["type"]){
             case "dir":
                 spawnSync("mkdir",["-p",global_conf.testsArgs[index].name])
-                let d = spawnSync("tail",["activity.log"])
-                console.log(d.stderr.toString())
+                let d = spawnSync("tail",[global_conf.target_log])
+                
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -36,8 +36,8 @@ try {
     
             case "file":
                 spawnSync("touch",[global_conf.testsArgs[index].name]);
-                let d2= spawnSync("tail",["activity.log"])
-                console.log(d2)
+                let d2= spawnSync("tail",[global_conf.target_log])
+                
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
                 notDeepStrictEqual(dat2.remove('')[dat2.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -53,16 +53,16 @@ try {
     for (let index = global_conf.testsArgs.length-1; index >= 0; index--) {
         switch(global_conf.testsArgs[index].type){
             case "dir":
-                spawnSync("mkdir",["-p",global_conf.testsArgs[index].name])
-                let d = spawnSync("tail",["activity.log"])
+                spawnSync("rm",["-rf",global_conf.testsArgs[index].name])
+                let d = spawnSync("tail",[global_conf.target_log])
                 console.log(d.stderr.toString())
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
                 break;
             case "file":
-                spawnSync("touch",[global_conf.testsArgs[index].name]);
-                let d2= spawnSync("tail",["activity.log"])
+                spawnSync("rm",[global_conf.testsArgs[index].name]);
+                let d2= spawnSync("tail",[global_conf.target_log])
                 console.log(d2.stderr.toString())
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
@@ -81,12 +81,13 @@ try {
     process.exit(0)
     
 } catch (error) {
-
+    console.log(error)
     throw error
 } finally{
     // spawnSync("docker",["container","stop",global_conf.containerName]) ;
     // spawnSync("docker",["container","rm",global_conf.containerName]) ;
     console.log("[-] Tests failed..")
+    process.exit(0)
 } 
 // }
 // let global_conf = {
@@ -99,7 +100,7 @@ try {
 
 // spawnSync("docker",["run","-d","--name",global_conf.containerName,"forsix-test"])
 // console.log("[!] Performing initial setup, listening to log file")
-// let log = spawn("docker", ["exec", "forsix","tail","-f","activity.log"])
+// let log = spawn("docker", ["exec", "forsix","tail","-f",global_conf.target_log])
 
 // log.stdout.on("data",(data)=>{
 //     let item_new = data.toString().split(":");

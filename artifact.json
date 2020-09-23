@@ -1,4 +1,6 @@
 {
     "containerName":"forsix",
-    "testsArgs":[{"type":"dir","name":"tests/abc"},{"type":"file","name":"tests/main.txt"},{"type":"file","name":"tests/abc/hidden.txt"}]
+    "testsArgs":[{"type":"dir","name":"tests/abc"},{"type":"file","name":"tests/main.txt"},{"type":"file","name":"tests/abc/hidden.txt"}],
+    "target_log":"tests.log",
+    "test_folder":"tests"
 }
