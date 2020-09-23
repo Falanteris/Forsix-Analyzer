@@ -5,7 +5,7 @@
   "main": "node testscript.js",
   "scripts": {
     "test": "node pipeline.js",
-    "start": "node exported_forensic_project.js"
+    "start": "node exported_forensic_project.js /watchdir log/activity.log"
   },
   "repository": {
     "type": "git",

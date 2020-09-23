@@ -11,6 +11,7 @@ spawnSync("forever", ["--sourceDir",process.cwd(),"start","exported_forensic_pro
 setTimeout(()=>{
     let tester = spawnSync("node",["testscript.js"])
     console.log(tester.stdout.toString());
+    console.log(tester.stderr.toString())
     equal(tester.stderr.toString().length,0)
     console.log("[+] Tests executed successfully..")
     console.log("[!] Stopping Services...")
