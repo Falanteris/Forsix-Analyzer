@@ -15,7 +15,8 @@ Array.prototype.remove = function() {
 
 let global_conf = JSON.parse(readFileSync("artifact.json"));
    
-spawnSync("docker",["run","-d","--name",global_conf.containerName,"forsix-test"])
+//spawnSync("docker",["run","-d","--name",global_conf.containerName,"forsix-test"])
+
 try { 
     console.log("[!] Testing for modified/creation..")
 
@@ -24,8 +25,8 @@ try {
         
         switch(global_conf.testsArgs[index]["type"]){
             case "dir":
-                spawnSync("docker",["exec",global_conf.containerName,"mkdir","-p",global_conf.testsArgs[index].name])
-                let d = spawnSync("docker", ["exec", global_conf.containerName,"tail","activity.log"])
+                spawnSync("mkdir"["-p",global_conf.testsArgs[index].name])
+                let d = spawnSync("tail",["activity.log"])
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -33,8 +34,8 @@ try {
                 break;
     
             case "file":
-                spawnSync("docker",["exec","forsix","touch",global_conf.testsArgs[index].name]);
-                let d2= spawnSync("docker", ["exec", global_conf.containerName,"tail","activity.log"])
+                spawnSync("touch",[global_conf.testsArgs[index].name]);
+                let d2= spawnSync("tail",["activity.log"])
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
                 notDeepStrictEqual(dat2.remove('')[dat2.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -50,15 +51,15 @@ try {
     for (let index = global_conf.testsArgs.length-1; index >= 0; index--) {
         switch(global_conf.testsArgs[index].type){
             case "dir":
-                spawnSync("docker",["exec",global_conf.containerName,"rm","-rf",global_conf.testsArgs[index].name])
-                let d = spawnSync("docker", ["exec", global_conf.containerName,"tail","activity.log"])
+                spawnSync("mkdir"["-p",global_conf.testsArgs[index].name])
+                let d = spawnSync("tail",["activity.log"])
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat = d.stdout.toString().split("\n")
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
                 break;
             case "file":
-                spawnSync("docker",["exec",global_conf.containerName,"rm",global_conf.testsArgs[index].name]);
-                let d2 = spawnSync("docker", ["exec", global_conf.containerName,"tail","activity.log"])
+                spawnSync("touch",[global_conf.testsArgs[index].name]);
+                let d2= spawnSync("tail",["activity.log"])
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
                 notDeepStrictEqual(dat2.remove('')[dat2.length-1].search(global_conf.testsArgs[index].name),-1)
@@ -69,9 +70,9 @@ try {
         }
         
     }
-    console.log("[+] Tests are passed successfully... stopping and removing container..")
-    spawnSync("docker",["container","stop",global_conf.containerName]) ;
-    spawnSync("docker",["container","rm",global_conf.containerName]) ;
+    // console.log("[+] Tests are passed successfully... stopping and removing container..")
+    // spawnSync("docker",["container","stop",global_conf.containerName]) ;
+    // spawnSync("docker",["container","rm",global_conf.containerName]) ;
     console.log("[+] Tests are finished")
     process.exit(0)
     
@@ -79,8 +80,9 @@ try {
 
     throw error
 } finally{
-    spawnSync("docker",["container","stop",global_conf.containerName]) ;
-    spawnSync("docker",["container","rm",global_conf.containerName]) ;
+    // spawnSync("docker",["container","stop",global_conf.containerName]) ;
+    // spawnSync("docker",["container","rm",global_conf.containerName]) ;
+    console.log("[-] Tests failed..")
 } 
 // }
 // let global_conf = {
