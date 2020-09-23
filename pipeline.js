@@ -21,4 +21,4 @@ setTimeout(()=>{
     spawnSync("rm", [global_conf.target_log])
     console.log("[!] Removing Tests...")
     spawnSync("rm", ["-rf",global_conf.test_folder])
-},1000);
+},200);
