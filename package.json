@@ -4,8 +4,7 @@
   "description": "Now you can use the 'exported_forensic_project.js' script to test the R/W listener.",
   "main": "node testscript.js",
   "scripts": {
-    "test": "node testscript.js",
-    "runtest": "mkdir tests && node exported_forensic_project.js tests activity.log",
+    "test": "mkdir tests && forever start exported_forensic_project.js tests activity.log && node testscript.js",
     "start": "node exported_forensic_project.js"
   },
   "repository": {
