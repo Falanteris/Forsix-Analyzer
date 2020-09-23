@@ -1,4 +1,10 @@
 # Forsix-Analyzer
+
+Now you can use the 'exported_forensic_project.js' script to test
+the R/W listener.
+
+`node exported_forensic_project.js <directory> <logfile>`
+
 `git clone https://github.com/Falanteris/Forsix-Analyzer/`
 
 A High Level Directory Logging Tool.

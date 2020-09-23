@@ -81,13 +81,13 @@ exports.listener = class dirListener{
 			console.log(`${this.dir+this.splitter+file} has been deleted`);
 			this.activity = "";
 			var date_str = this.getTimestamp();	
-			this.log(`${this.dir+this.splitter+file} has been deleted at at ${date_str}`)
+			this.log(`${this.dir+this.splitter+file}:has been deleted at ${date_str}`)
 		}
 		if(activ.search("Found")!=-1){
 			console.log(`${this.dir+this.splitter+file} is a new file..`)
 			this.activity = "";
 			var date_str = this.getTimestamp();
-			this.log(`${this.dir+this.splitter+file} is a new file created at at ${date_str}`)
+			this.log(`${this.dir+this.splitter+file}:is a new file created at ${date_str}`)
 		}
 
 		}
@@ -95,7 +95,7 @@ exports.listener = class dirListener{
 			console.log(`${this.dir+this.splitter+file} was modified`);
 			this.activity = "";
 			var date_str = this.getTimestamp();
-			this.log(`${this.dir+this.splitter+file} was modified at ${date_str}`)
+			this.log(`${this.dir+this.splitter+file}:was modified at ${date_str}`)
 		}
 	}
 	log(input){

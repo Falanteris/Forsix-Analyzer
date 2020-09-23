@@ -1,0 +1,4 @@
+{
+    "containerName":"forsix",
+    "testsArgs":[{"type":"dir","name":"tests/abc"},{"type":"file","name":"tests/main.txt"},{"type":"file","name":"tests/abc/hidden.txt"}]
+}
