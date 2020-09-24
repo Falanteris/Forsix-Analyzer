@@ -7,6 +7,7 @@ exports.listener = class dirListener{
 	constructor(dir,logfile="entry.log"){
 			this.dir = dir;
 			this.contents = fs.readdirSync(path.normalize(dir));
+			this.structure = path.parse(this.dir)
 			if(process.platform=="win32"){
 				
 				this.splitter = "\\"
@@ -68,7 +69,6 @@ exports.listener = class dirListener{
 		var activity = this.activity.split("|");
 		var activ = "";
 		let index;
-		console.log(this.activity)
 		for(index in activity){
 			activ+=activity[index];
 		}
@@ -130,15 +130,19 @@ exports.listener = class dirListener{
 				// console.log(this.dir+this.splitter+filename);
 				// var file = fs.statSync(this.dir+this.splitter+filename);
 				//var read_meta = fs.readFileSync(this.meta_name, 'utf8');
-				
-				let test_read = fs.readFileSync(this.dir+this.splitter+filename);
+				if(this.structure.base==filename){
+					console.log("[-] Activity on self detected, letting parent listener handle..");
+					//ignoring events on self to avoid weird log output
+				}
+				else{
+					let test_read = fs.readFileSync(this.dir+this.splitter+filename);
 				
 				// if(typeof(file)=="object"){
 				// 	console.log(file);
 				// }
 				// 
-				this.activity+="Found";
-				
+					this.activity+="Found";
+				}
 				
 			}
 			catch(error){
