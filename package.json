@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/Falanteris/Forsix-Analyzer/issues"
   },
-  "homepage": "https://github.com/Falanteris/Forsix-Analyzer#readme"
+  "homepage": "https://github.com/Falanteris/Forsix-Analyzer#readme",
+  "dependencies": {
+    "redis": "^3.0.2"
+  }
 }

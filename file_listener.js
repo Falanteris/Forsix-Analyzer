@@ -2,7 +2,7 @@ var fs = require('fs');
 var readline = require('readline');
 var crypto = require('crypto');
 var path = require("path")
-
+let checksumTools = require("./checksummer");
 exports.listener = class dirListener{
 	constructor(dir,logfile="entry.log"){
 			this.dir = dir;
@@ -26,14 +26,17 @@ exports.listener = class dirListener{
 			let content;
 			this.subdir_listeners = []
 			for(content in dir_read){
+				let inp = path.normalize(this.dir+this.splitter+dir_read[content])
 				try {
 					console.log(dir_read[content])
-					let test_read = fs.readFileSync(this.dir+this.splitter+dir_read[content]);
-					this.meta(this.dir,dir_read[content]);	
+					
+					let test_read = fs.readFileSync(inp);
+					//this.meta(this.dir,dir_read[content]);	
+					checksumTools.setMD5Sum(inp);
 				} catch (error) {
 					if(error.code == "EISDIR"){
 
-						let newSubdirListener = new dirListener(this.dir+this.splitter+dir_read[content],this.logfile_name)
+						let newSubdirListener = new dirListener(inp)
 						this.subdir_listeners.push(newSubdirListener);
 
 					}
@@ -72,30 +75,47 @@ exports.listener = class dirListener{
 		for(index in activity){
 			activ+=activity[index];
 		}
-
-
-		console.log(activ)
+		console.log(event);
 		if(event == "rename"){
+			if(activ.search("Missing")!=-1){
+				let inp = path.normalize(this.dir+this.splitter+file);
+				//checksumTools.setMD5Sum(`${inp}`);
+				console.log(`${inp} has been deleted..`)
+				this.activity = "";
+				var date_str = this.getTimestamp();
+				this.log(`${inp}:is a new file deleted at ${date_str}`)
+			}
+	
 
-		if(activ.search("Missing")!=-1){
-			console.log(`${this.dir+this.splitter+file} has been deleted`);
-			this.activity = "";
-			var date_str = this.getTimestamp();	
-			this.log(`${this.dir+this.splitter+file}:has been deleted at ${date_str}`)
-		}
 		if(activ.search("Found")!=-1){
-			console.log(`${this.dir+this.splitter+file} is a new file..`)
+			let inp = path.normalize(this.dir+this.splitter+file);
+			
+			console.log(`${inp} is a new file..`)
 			this.activity = "";
 			var date_str = this.getTimestamp();
-			this.log(`${this.dir+this.splitter+file}:is a new file created at ${date_str}`)
+			this.log(`${inp}:is a new file created at ${date_str}`)
+			checksumTools.setMD5Sum(`${inp}`);
 		}
 
 		}
 		if(event =="change"){
-			console.log(`${this.dir+this.splitter+file} was modified`);
-			this.activity = "";
-			var date_str = this.getTimestamp();
-			this.log(`${this.dir+this.splitter+file}:was modified at ${date_str}`)
+			
+				//console.log(`${this.dir+this.splitter+file}`)
+				let inp = path.normalize(this.dir+this.splitter+file);
+				checksumTools.checkSum(`${inp}`,(err)=>{
+					if(err){
+						
+						this.activity = "";
+						var date_str = this.getTimestamp();
+						let inp = path.normalize(this.dir+this.splitter+file);
+						this.log(`${inp}:was modified at ${date_str}`)
+					}
+				});
+				
+			
+				//console.log(`${this.dir+this.splitter+file} was modified`);
+			
+			
 		}
 	}
 	log(input){
@@ -135,31 +155,34 @@ exports.listener = class dirListener{
 					//ignoring events on self to avoid weird log output
 				}
 				else{
-					let test_read = fs.readFileSync(this.dir+this.splitter+filename);
-				
+					let test_read = fs.readFileSync(path.normalize(this.dir+this.splitter+filename));
+
 				// if(typeof(file)=="object"){
 				// 	console.log(file);
 				// }
 				// 
-					this.activity+="Found";
+					this.activity +="Found"
 				}
+				this.detActivity(event,filename);
+
 				
 			}
 			catch(error){
 				
 				if (error.code == "EISDIR"){
 					console.log("Detected newly made directory.. hooking it to listener")
-					let new_listener = new dirListener(this.dir+this.splitter+filename,this.logfile_name)
+					let new_listener = new dirListener(path.normalize(this.dir+this.splitter+filename),this.logfile_name)
 					new_listener.listen();
 				}
 				else{
 					console.log("Error in extracting meta..file might be moved or deleted");
 					this.activity+="Missing";
 					console.log(error)
+					this.detActivity(event,filename);
 				}
 				
 			}
-			this.detActivity(event,filename);
+			
 			// var prom_detect = new Promise(function(resolve,reject){
 			// 	setTimeout(resolve(filename),1000);
 			// }).then((file)=>{
