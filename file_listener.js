@@ -4,10 +4,13 @@ var crypto = require('crypto');
 var path = require("path")
 let checksumTools = require("./checksummer");
 exports.listener = class dirListener{
-	constructor(dir,logfile="entry.log"){
+	constructor(dir,logfile){
+			console.log("STARTED FORSIX LISTENER ON :" + dir);
+			console.log("LOGFILE : "+logfile)
 			this.dir = dir;
 			this.contents = fs.readdirSync(path.normalize(dir));
 			this.structure = path.parse(this.dir)
+			this.activity = new Array();
 			if(process.platform=="win32"){
 				
 				this.splitter = "\\"
@@ -36,7 +39,7 @@ exports.listener = class dirListener{
 				} catch (error) {
 					if(error.code == "EISDIR"){
 
-						let newSubdirListener = new dirListener(inp)
+						let newSubdirListener = new dirListener(inp,this.logfile_name)
 						this.subdir_listeners.push(newSubdirListener);
 
 					}
@@ -69,32 +72,37 @@ exports.listener = class dirListener{
 		return date_str;
 	}
 	detActivity(event,file){
-		var activity = this.activity.split("|");
-		var activ = "";
+		let activ = this.activity
 		let index;
-		for(index in activity){
-			activ+=activity[index];
-		}
+		
 		console.log(event);
 		if(event == "rename"){
-			if(activ.search("Missing")!=-1){
+			if(activ[0] == "Missing"){
 				let inp = path.normalize(this.dir+this.splitter+file);
 				//checksumTools.setMD5Sum(`${inp}`);
 				console.log(`${inp} has been deleted..`)
-				this.activity = "";
+				this.activity.shift();
 				var date_str = this.getTimestamp();
 				this.log(`${inp}:is a new file deleted at ${date_str}`)
 			}
 	
 
-		if(activ.search("Found")!=-1){
+		if(activ[0] == "Found"){
+			var date_str = this.getTimestamp();
 			let inp = path.normalize(this.dir+this.splitter+file);
 			
-			console.log(`${inp} is a new file..`)
-			this.activity = "";
-			var date_str = this.getTimestamp();
-			this.log(`${inp}:is a new file created at ${date_str}`)
-			checksumTools.setMD5Sum(`${inp}`);
+			try {
+			
+				checksumTools.setMD5Sum(`${inp}`);
+				console.log(`${inp} is a new file..`)
+				
+				this.activity.shift();
+				
+				this.log(`${inp}:is a new file created at ${date_str}`)	
+			} catch (error) {
+				this.log(`${inp}:cannot be read, might be immediate deletion at ${date_str}`)
+			}
+			
 		}
 
 		}
@@ -105,7 +113,7 @@ exports.listener = class dirListener{
 				checksumTools.checkSum(`${inp}`,(err)=>{
 					if(err){
 						
-						this.activity = "";
+						this.activity.shift();
 						var date_str = this.getTimestamp();
 						let inp = path.normalize(this.dir+this.splitter+file);
 						this.log(`${inp}:was modified at ${date_str}`)
@@ -136,7 +144,6 @@ exports.listener = class dirListener{
 
 	}
 	listen(){
-		this.activity = "";
 		console.log(`Attemtping to start listening activity on ${this.dir}`);
 		var changes = "";
 		let activity;
@@ -161,7 +168,7 @@ exports.listener = class dirListener{
 				// 	console.log(file);
 				// }
 				// 
-					this.activity +="Found"
+					this.activity.push("Found")
 				}
 				this.detActivity(event,filename);
 
@@ -176,7 +183,7 @@ exports.listener = class dirListener{
 				}
 				else{
 					console.log("Error in extracting meta..file might be moved or deleted");
-					this.activity+="Missing";
+					this.activity.push("Missing");
 					console.log(error)
 					this.detActivity(event,filename);
 				}

@@ -11,7 +11,8 @@ class Emitter extends event{}
 
 let checkSumWithRedisData = (filename,cb)=>{
     let redis = require("redis");
-    let client = redis.createClient()
+    let redisConfig = JSON.parse(readFileSync("artifact.json")).redis
+    let client = redis.createClient("redis://"+redisConfig.host+":"+redisConfig.port)
     // let sharedState = [];
     let dataToRead = readFileSync(filename).toString();
     // let h1 = crypto.createHash("md5");
@@ -28,8 +29,6 @@ let checkSumWithRedisData = (filename,cb)=>{
                 console.log(err);
                 return;
             }
-            console.log(data)
-            console.log(redisData)
             let comparison = Buffer.compare(data,Buffer.from(redisData))
             console.log(comparison)
             if(comparison!=0){
@@ -72,7 +71,8 @@ let checkSumWithRedisData = (filename,cb)=>{
 }
 let setMD5Sum = (filename)=>{
     let redis = require("redis");
-    let client = redis.createClient()
+    let redisConfig = JSON.parse(readFileSync("artifact.json")).redis
+    let client = redis.createClient("redis://"+redisConfig.host+":"+redisConfig.port)
     let dataToRead = readFileSync(filename).toString();
     let h1 = crypto.createHash("md5");
     h1.on("data",(data)=>{

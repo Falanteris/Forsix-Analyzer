@@ -1,8 +1,11 @@
 const { exit } = require("process");
+const { readFileSync } = require("fs");
 
 var ls = require("./file_listener").listener;
 
-var new_listener = new ls(process.argv[2],process.argv[3]);
+let logfile = JSON.parse(readFileSync("artifact.json")).target_log;
+
+var new_listener = new ls(process.argv[2],logfile);
 
 //console.log(new_listener);
 

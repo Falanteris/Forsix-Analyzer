@@ -1,0 +1,22 @@
+version: '3.2'
+
+services:
+  forsix:
+    build:
+      context: .
+    volumes:
+    - type: "bind"
+      source: "/home/jasperzec/listen-to-this" # replace this with your directory here
+      target: "/watchdir"
+    - type: "bind"
+      source: "/home/jasperzec/forsix-analyzer/Forsix-Analyzer/artifact.json"
+      target: "/usr/src/app/artifact.json"
+    network_mode: host
+  redis:
+    image: "redis"
+    ports:
+      - "6379:6379"
+networks:
+  common:
+    driver: host
+    
