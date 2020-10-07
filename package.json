@@ -1,6 +1,6 @@
 {
   "name": "forsix-analyzer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Now you can use the 'exported_forensic_project.js' script to test the R/W listener.",
   "main": "node testscript.js",
   "scripts": {

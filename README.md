@@ -1,19 +1,14 @@
-[![buddy pipeline](https://app.buddy.works/rayhanrts/forsix-analyzer/pipelines/pipeline/280889/badge.svg?token=9114cadb0556693d535af80caad668061508781364e36c932734c3058503fa9c "buddy pipeline")](https://app.buddy.works/rayhanrts/forsix-analyzer/pipelines/pipeline/280889)
+[![Build Status](http://rk-sragen.site:8080/buildStatus/icon?job=Forsix)](http://rk-sragen.site:8080/job/Forsix/)
 
 # Forsix-Analyzer
 
-Now you can use the 'exported_forensic_project.js' script to test
-the R/W listener.
+This is the script branch of the system, which means you can run this without docker
 
-`npm start -- <directory> <logfile>`
+To run this, simply execute
 
-`git clone https://github.com/Falanteris/Forsix-Analyzer/`
+    $ npm start
 
-A High Level Directory Logging Tool.
-
-This is a College Project that me and my friends made.
-Right now, its able to seamlessly detect file changes within a directory. Currently the project is CLI based, we might consider using Elektron Framework to connect the module to a GUI version.
-But, the module is more or less ready. If you wish to try, you can `git clone`- this project (need to get invited first though).
+This requires the user to input the path to the directory that they wish to watch, and the logfile that will log those events.
 
 # Technical Details
 
