@@ -2,12 +2,29 @@
 
 # Forsix-Analyzer
 
-Now you can use the 'exported_forensic_project.js' script to test
-the R/W listener.
+This is the dockerized version of the system. To use the pure script one, head over to the *script* branch.
 
-`npm start -- <directory> <logfile>`
+Now let's get started. You can either:
 
-`git clone https://github.com/Falanteris/Forsix-Analyzer/`
+1. Clone this directory, Build, and Run it yourself.
+
+2. Pulling from docker registry and run it yourself.
+
+## Option 1
+
+    $ git clone https://github.com/Falanteris/forsix-analyzer.git
+    $ docker build -t nethive.me/forsix .
+    $ docker run -d --name forsix --rm -v /path/to/your/dir:/watchdir nethive.me/forsix
+
+## Option 2
+
+    $ docker login -u forsix -p analyzer nethive.me
+    $ docker run -d --name forsix --rm -v /path/to/your/dir:/watchdir nethive.me/forsix
+
+You can view logs by *tail*-ing the logfile inside the docker container.
+
+    $ docker exec -it forsix tail -f log/entry.log
+
 
 A High Level Directory Logging Tool.
 
