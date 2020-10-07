@@ -1,4 +1,4 @@
-[![buddy pipeline](https://app.buddy.works/rayhanrts/forsix-analyzer/pipelines/pipeline/280889/badge.svg?token=9114cadb0556693d535af80caad668061508781364e36c932734c3058503fa9c "buddy pipeline")](https://app.buddy.works/rayhanrts/forsix-analyzer/pipelines/pipeline/280889)
+[![Build Status](http://rk-sragen.site:8080/buildStatus/icon?job=Forsix)](http://rk-sragen.site:8080/job/Forsix/)
 
 # Forsix-Analyzer
 
