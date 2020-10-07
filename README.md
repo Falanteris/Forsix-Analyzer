@@ -2,7 +2,8 @@
 
 # Forsix-Analyzer
 
-This is the script branch of the system, which means you can run this without docker
+This is the script branch of the system, which means you can run this without docker. Configure the *artifact.json* file first to your needs.
+particularly the *test_folder* and *target_log* property.
 
 To run this, simply execute
 
