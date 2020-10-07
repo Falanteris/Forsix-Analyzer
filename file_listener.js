@@ -66,9 +66,75 @@ exports.listener = class dirListener{
 				console.log(`Failed to read and append meta of ${dir}`);
 			}					
 	}
-	getTimestamp(){
+	static getTimestamp(){
 		var date = new Date();
-		var date_str = `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()} -${date.getDate()}  | ${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()} \n`;	
+		let getDay = date.getDay();
+		let getMonth = date.getMonth()
+		switch(getDay){
+			case 1:
+				getDay = "Monday"
+				break;
+			case 2:
+				getDay = "Tuesday"
+				break;
+			case 3:
+				getDay = "Wednesday"
+				break;
+			case 4:
+				getDay = "Thursday"
+				break;
+			case 5:
+				getDay = "Friday"
+				break;
+			case 6:
+				getDay = "Saturday"
+				break;
+			case 7:
+				getDay = "Sunday"
+				break;
+		}
+		switch(getMonth){
+			case 0:
+				getMonth = "January";
+				break;
+			case 1:
+				getMonth = "February";
+				break;
+			case 2:
+				getMonth = "March";
+				break;
+			case 3:
+				getMonth = "April";
+				break;
+			case 4:
+				getMonth = "May";
+				break;
+			case 5:
+				getMonth = "June";
+				break;
+			case 6:
+				getMonth = "July";
+				break;
+			case 7:
+				getMonth = "August";
+				break;
+			case 8:
+				getMonth = "September";
+				break;
+			case 9:
+				getMonth = "October";
+				break;
+			case 10:
+				getMonth = "November";
+				break;
+			case 11:
+				getMonth = "December";
+				break;
+				
+		}
+		
+		//var date_str = `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()} -${date.getDate()}  | ${date.getHours()} : ${date.getMinutes()} : ${date.getSeconds()} \n`;
+		var date_str = 	`${getDay.slice(0,3)} ${date.getDate()}/${getMonth.slice(0,3)}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}\n`;
 		return date_str;
 	}
 	detActivity(event,file){
@@ -83,7 +149,7 @@ exports.listener = class dirListener{
 				console.log(`${inp} has been deleted..`)
 				this.activity.shift();
 				var date_str = this.getTimestamp();
-				this.log(`${inp}:is a new file deleted at ${date_str}`)
+				this.log(`DELETED ${inp}@${date_str}`)
 			}
 	
 
@@ -98,7 +164,7 @@ exports.listener = class dirListener{
 				
 				this.activity.shift();
 				
-				this.log(`${inp}:is a new file created at ${date_str}`)	
+				this.log(`CREATED ${inp}@${date_str}`)	
 			} catch (error) {
 				this.log(`${inp}:cannot be read, might be immediate deletion at ${date_str}`)
 			}
@@ -116,7 +182,7 @@ exports.listener = class dirListener{
 						this.activity.shift();
 						var date_str = this.getTimestamp();
 						let inp = path.normalize(this.dir+this.splitter+file);
-						this.log(`${inp}:was modified at ${date_str}`)
+						this.log(`MODIFIED ${inp}@${date_str}`)
 					}
 				});
 				
