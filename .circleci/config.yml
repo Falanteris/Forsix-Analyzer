@@ -13,5 +13,8 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Installing forever
+          command: 'npm install -g forever@3.0.2'
+      - run:
           name: Perform a quick test
           command: 'npm test'
