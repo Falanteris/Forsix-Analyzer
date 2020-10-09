@@ -2,12 +2,29 @@
 
 # Forsix-Analyzer
 
-This is the script branch of the system, which means you can run this without docker. Configure the *artifact.json* file first to your needs.
-particularly the *test_folder* and *target_log* property.
 
-To run this, simply execute
+This is the dockerized version of the system. To use the pure script one, head over to the *script* branch.
 
-    $ npm start
+Now let's get started. You can either:
+
+1. Clone this directory, Build, and Run it yourself.
+
+2. Pulling from docker registry and run it yourself.
+
+## Option 1
+
+    $ git clone https://github.com/Falanteris/forsix-analyzer.git
+    $ docker build -t nethive.me/forsix .
+    $ docker run -d --name forsix --rm -v /path/to/your/dir:/watchdir nethive.me/forsix
+
+## Option 2
+
+    $ docker login -u forsix -p analyzer nethive.me
+    $ docker run -d --name forsix --rm -v /path/to/your/dir:/watchdir nethive.me/forsix
+
+You can view logs by *tail*-ing the logfile inside the docker container.
+
+    $ docker exec -it forsix tail -f log/entry.log
 
 This requires the user to input the path to the directory that they wish to watch, and the logfile that will log those events.
 
