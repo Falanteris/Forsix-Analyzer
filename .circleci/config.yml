@@ -1,0 +1,20 @@
+version: 2.1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+
+jobs:
+  build:
+    docker:
+      - image: node:lts
+    steps:
+      - checkout
+      - run:
+          name: Installing forever
+          command: 'npm install -g forever@3.0.2'
+      - run:
+          name: Perform a quick test
+          command: 'npm test'
