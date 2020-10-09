@@ -2,6 +2,7 @@
 
 # Forsix-Analyzer
 
+
 This is the dockerized version of the system. To use the pure script one, head over to the *script* branch.
 
 Now let's get started. You can either:
@@ -25,12 +26,7 @@ You can view logs by *tail*-ing the logfile inside the docker container.
 
     $ docker exec -it forsix tail -f log/entry.log
 
-
-A High Level Directory Logging Tool.
-
-This is a College Project that me and my friends made.
-Right now, its able to seamlessly detect file changes within a directory. Currently the project is CLI based, we might consider using Elektron Framework to connect the module to a GUI version.
-But, the module is more or less ready. If you wish to try, you can `git clone`- this project (need to get invited first though).
+This requires the user to input the path to the directory that they wish to watch, and the logfile that will log those events.
 
 # Technical Details
 

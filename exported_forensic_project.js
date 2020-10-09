@@ -3,6 +3,7 @@ const { readFileSync } = require("fs");
 
 var ls = require("./file_listener").listener;
 
+
 let config = JSON.parse(readFileSync("artifact.json"))
 let logfile = config.target_log;
 let test_folder = config.test_folder
