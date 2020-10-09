@@ -1,8 +1,8 @@
 {
     "containerName":"forsix",
     "testsArgs":[{"type":"dir","name":"anonymous/abc"},{"type":"file","name":"anonymous/main.txt"},{"type":"file","name":"anonymous/abc/hidden.txt"}],
-    "target_log":"/home/jasperzec/logfiles/test.log",
-    "test_folder":"/home/jasperzec/listen-to-this",
+    "target_log":"anonymous.log",
+    "test_folder":"anonymous",
     "redis":{"host":"0.0.0.0","port":"6379"},
     "ignoredExtensions":[".swp"]
 }
