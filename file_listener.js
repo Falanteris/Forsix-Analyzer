@@ -178,7 +178,7 @@ exports.listener = class dirListener{
 				let inp = path.normalize(this.dir+this.splitter+file);
 				this.activity.shift();
 				var date_str = this.getTimestamp();
-				let inp = path.normalize(this.dir+this.splitter+file);
+				//let inp = path.normalize(this.dir+this.splitter+file);
 				this.log(`MODIFIED ${inp}@${date_str}`)
 				
 				
