@@ -2,7 +2,7 @@ var fs = require('fs');
 var readline = require('readline');
 var crypto = require('crypto');
 var path = require("path")
-let checksumTools = require("./checksummer");
+//let checksumTools = require("./checksummer");
 exports.listener = class dirListener{
 	constructor(dir,logfile){
 			console.log("STARTED FORSIX LISTENER ON :" + dir);
@@ -35,7 +35,7 @@ exports.listener = class dirListener{
 					
 					let test_read = fs.readFileSync(inp);
 					//this.meta(this.dir,dir_read[content]);	
-					checksumTools.setMD5Sum(inp);
+					//checksumTools.setMD5Sum(inp);
 				} catch (error) {
 					if(error.code == "EISDIR"){
 
@@ -159,7 +159,7 @@ exports.listener = class dirListener{
 			
 			try {
 			
-				checksumTools.setMD5Sum(`${inp}`);
+				//checksumTools.setMD5Sum(`${inp}`);
 				console.log(`${inp} is a new file..`)
 				
 				this.activity.shift();
@@ -176,15 +176,11 @@ exports.listener = class dirListener{
 			
 				//console.log(`${this.dir+this.splitter+file}`)
 				let inp = path.normalize(this.dir+this.splitter+file);
-				checksumTools.checkSum(`${inp}`,(err)=>{
-					if(err){
-						
-						this.activity.shift();
-						var date_str = this.getTimestamp();
-						let inp = path.normalize(this.dir+this.splitter+file);
-						this.log(`MODIFIED ${inp}@${date_str}`)
-					}
-				});
+				this.activity.shift();
+				var date_str = this.getTimestamp();
+				let inp = path.normalize(this.dir+this.splitter+file);
+				this.log(`MODIFIED ${inp}@${date_str}`)
+				
 				
 			
 				//console.log(`${this.dir+this.splitter+file} was modified`);
