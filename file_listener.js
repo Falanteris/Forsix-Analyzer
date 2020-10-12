@@ -66,7 +66,7 @@ exports.listener = class dirListener{
 				console.log(`Failed to read and append meta of ${dir}`);
 			}					
 	}
-	static getTimestamp(){
+	getTimestamp(){
 		var date = new Date();
 		let getDay = date.getDay();
 		let getMonth = date.getMonth()
