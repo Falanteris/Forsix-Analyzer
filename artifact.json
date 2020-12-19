@@ -1,8 +1,1 @@
-{
-    "containerName":"forsix",
-    "testsArgs":[{"type":"dir","name":"anonymous/abc"},{"type":"file","name":"anonymous/main.txt"},{"type":"file","name":"anonymous/abc/hidden.txt"}],
-    "target_log":"log/entry.log",
-    "test_folder":"/watchdir",
-    "redis":{"host":"0.0.0.0","port":"6379"},
-    "ignoredExtensions":[".swp"]
-}
+{"containerName":"forsix","testsArgs":[{"type":"dir","name":"anonymous/abc"},{"type":"file","name":"anonymous/main.txt"},{"type":"file","name":"anonymous/abc/hidden.txt"}],"target_log":"log/entry.log","test_folder":"/watchdir","mode":"production","redis":{"host":"redis","port":"6379"},"ignoredExtensions":[".swp"]}

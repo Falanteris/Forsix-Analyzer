@@ -7,7 +7,25 @@ const { fstat, fsync, readFileSync, writeFileSync } = require("fs");
 
 class Emitter extends event{}
 
-
+let pingRedis = (cb)=>{
+    let redis = require("redis");
+    let redisConfig = JSON.parse(readFileSync("artifact.json")).redis
+    try {
+        let client = redis.createClient("redis://"+redisConfig.host+":"+redisConfig.port)
+        client.on('error',()=>{
+            cb(false)
+        })
+        client.on('ready',()=>{
+            cb(true)
+        })
+        
+            
+    } catch (error) {
+        
+    }
+    
+    
+}
 
 let checkSumWithRedisData = (filename,cb)=>{
     let redis = require("redis");
@@ -32,7 +50,7 @@ let checkSumWithRedisData = (filename,cb)=>{
             let comparison = Buffer.compare(data,Buffer.from(redisData))
             console.log(comparison)
             if(comparison!=0){
-                cb(new Error("File has changed.."));
+                cb(new Error(`${filename} has changed..`));
             }
             else{
                 cb(null)
@@ -92,5 +110,6 @@ let setMD5Sum = (filename)=>{
 
 module.exports = {
     checkSum:checkSumWithRedisData,
-    setMD5Sum:setMD5Sum
+    setMD5Sum:setMD5Sum,
+    ping:pingRedis
 }

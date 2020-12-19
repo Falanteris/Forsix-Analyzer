@@ -6,6 +6,6 @@ COPY . /usr/src/app
 
 RUN npm install
 
-RUN mkdir log
+RUN npm test
 
 CMD ["npm","start"]

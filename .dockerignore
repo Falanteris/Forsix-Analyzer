@@ -1,6 +1,6 @@
 Electron
 Dockerfile
 node_modules
-package-lock.json
+package-*.json
 docker-compose.yml
 *.log

@@ -31,7 +31,7 @@ try {
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 
                 let dat = d.stdout.toString().split("\n")
-                console.log(dat)
+                
                 notDeepStrictEqual(dat.remove('')[dat.length-1].search(global_conf.testsArgs[index].name),-1)
 
                 break;
@@ -42,7 +42,6 @@ try {
                 
                 console.log("Currently tested : " + global_conf.testsArgs[index].name)
                 let dat2 = d2.stdout.toString().split("\n")
-                console.log(dat2)
                 notDeepStrictEqual(dat2.remove('')[dat2.length-1].search(global_conf.testsArgs[index].name),-1)
                 break
             default:

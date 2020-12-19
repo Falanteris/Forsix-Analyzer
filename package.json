@@ -20,5 +20,7 @@
     "url": "https://github.com/Falanteris/Forsix-Analyzer/issues"
   },
   "homepage": "https://github.com/Falanteris/Forsix-Analyzer#readme",
-  "dependencies": {}
+  "dependencies": {
+    "redis": "^3.0.2"
+  }
 }
